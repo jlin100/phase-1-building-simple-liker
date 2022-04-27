@@ -4,8 +4,53 @@ const FULL_HEART = '♥'
 
 // Your JavaScript code goes here!
 
+document.addEventListener("DOMContentLoaded", () => {
 
+  console.log("DOM CONTENT HAS LOADED")
+  const modal = document.getElementById("modal")
+  modal.classList.add("hidden")
+  
+  clickListener()
+})
+function hideError() {
+  modal.classList.add("hidden")
+}
 
+function findLikes() {
+  const likeArr = document.querySelectorAll(".like-glyph")
+
+  likeArr.forEach((singularLike) => {
+    singularLike.addEventListener("click", () => console.log("YOU FOUND ME! Like!"))
+  })
+}
+
+function clickListener() {
+  document.addEventListener("click", (event) => {
+    if(event.target.classList[0] === "like-glyph") {
+      
+      mimicServerCall()
+        .then((resp) => {
+          console.log('response:', resp)
+          const activated = event.target.classList.contains("activated-heart");
+          if(activated) {
+            event.target.classList.remove("activated-heart")
+            event.target.innerHTML = EMPTY_HEART
+          } else {
+            event.target.classList.add("activated-heart")
+            event.target.innerHTML = FULL_HEART
+          }
+          
+          activated;
+        })
+        .catch((error) => {
+          document.getElementById(".modal").remove(".hidden");
+          setTimeout(function() {
+            document.getElementById(".modal").add(".hidden");;
+          },3000);
+        });
+    }
+  });
+}
 
 //------------------------------------------------------------------------------
 // Don't change the code below: this function mocks the server response
